@@ -1,0 +1,2198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tournament Management System</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --secondary: #475569;
+      --light: #f1f5f9;
+      --dark: #1e293b;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --info: #3b82f6;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f8fafc;
+      color: var(--dark);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    /* Header Styles */
+    header {
+      background-color: white;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo i {
+      font-size: 1.8rem;
+    }
+
+    .nav-menu {
+      display: flex;
+      list-style: none;
+      gap: 1.5rem;
+    }
+
+    .nav-link {
+      text-decoration: none;
+      color: var(--secondary);
+      font-weight: 500;
+      transition: color 0.3s;
+      cursor: pointer;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      color: var(--primary);
+    }
+
+    /* Main Content Styles */
+    main {
+      padding: 2rem 0;
+    }
+
+    .section-title {
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+      color: var(--dark);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
+      border: none;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--primary-dark);
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-outline:hover {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-danger {
+      background-color: var(--danger);
+      color: white;
+    }
+
+    .btn-danger:hover {
+      background-color: #b91c1c;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 0.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+      padding: 1rem;
+      background-color: var(--light);
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--dark);
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .status-upcoming {
+      background-color: var(--info);
+      color: white;
+    }
+
+    .status-active {
+      background-color: var(--success);
+      color: white;
+    }
+
+    .status-completed {
+      background-color: var(--secondary);
+      color: white;
+    }
+
+    .status-scheduled {
+      background-color: var(--info);
+      color: white;
+    }
+
+    .status-live {
+      background-color: var(--warning);
+      color: white;
+    }
+
+    .status-completed {
+      background-color: var(--success);
+      color: white;
+    }
+
+    .grid {
+      display: grid;
+      gap: 1.5rem;
+    }
+
+    .grid-cols-1 {
+      grid-template-columns: 1fr;
+    }
+
+    .grid-cols-2 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .grid-cols-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    /* Table Styles */
+    .table-container {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    th {
+      background-color: var(--light);
+      font-weight: 600;
+    }
+
+    tr:hover {
+      background-color: #f8fafc;
+    }
+
+    .versus {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .team-name {
+      font-weight: 500;
+    }
+
+    .score {
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    /* Form Styles */
+    .form-container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+
+    .form-input,
+    .form-select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 0.375rem;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+
+    .form-input:focus,
+    .form-select:focus {
+      border-color: var(--primary);
+      outline: none;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background-color: white;
+      border-radius: 0.5rem;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transform: translateY(-20px);
+      transition: transform 0.3s;
+    }
+
+    .modal-overlay.active .modal {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      padding: 1.25rem;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--secondary);
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    .modal-footer {
+      padding: 1.25rem;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+    }
+
+    /* Standing Styles */
+    .standings-table td {
+      vertical-align: middle;
+    }
+
+    .team-standing {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .rank {
+      font-weight: 600;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background-color: var(--light);
+    }
+
+    .form-guide {
+      display: flex;
+      gap: 0.25rem;
+    }
+
+    .form-result {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .form-win {
+      background-color: var(--success);
+      color: white;
+    }
+
+    .form-draw {
+      background-color: var(--warning);
+      color: white;
+    }
+
+    .form-loss {
+      background-color: var(--danger);
+      color: white;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #e2e8f0;
+      margin-bottom: 1.5rem;
+    }
+
+    .tab {
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      font-weight: 500;
+    }
+
+    .tab.active {
+      border-bottom-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Toast Notification */
+    .toast-container {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      z-index: 1000;
+    }
+
+    .toast {
+      padding: 1rem 1.5rem;
+      border-radius: 0.375rem;
+      background-color: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-top: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transform: translateX(120%);
+      transition: transform 0.3s;
+    }
+
+    .toast.show {
+      transform: translateX(0);
+    }
+
+    .toast-success {
+      border-left: 4px solid var(--success);
+    }
+
+    .toast-error {
+      border-left: 4px solid var(--danger);
+    }
+
+    .toast-icon {
+      font-size: 1.25rem;
+    }
+
+    .toast-success .toast-icon {
+      color: var(--success);
+    }
+
+    .toast-error .toast-icon {
+      color: var(--danger);
+    }
+
+    .toast-message {
+      flex: 1;
+    }
+
+    .toast-close {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--secondary);
+    }
+
+    /* Media Queries */
+    @media (max-width: 768px) {
+      .grid-cols-2, .grid-cols-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .navbar {
+        flex-direction: column;
+      }
+
+      .nav-menu {
+        margin-top: 1rem;
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="container">
+    <nav class="navbar">
+      <div class="logo">
+        <i class="fas fa-trophy"></i>
+        <span>TournamentPro</span>
+      </div>
+      <ul class="nav-menu">
+        <li><a href="#" class="nav-link active" data-page="dashboard">Dashboard</a></li>
+        <li><a href="#" class="nav-link" data-page="tournaments">Tournaments</a></li>
+        <li><a href="#" class="nav-link" data-page="teams">Teams</a></li>
+        <li><a href="#" class="nav-link" data-page="matches">Matches</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <!-- Dashboard Page -->
+    <div class="page active" id="dashboard-page">
+      <h1 class="section-title">Dashboard</h1>
+
+      <div class="grid grid-cols-3">
+        <div class="card">
+          <div class="card-body">
+            <h3 class="card-title">Active Tournaments</h3>
+            <p class="stats" id="active-tournaments-count">0</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h3 class="card-title">Total Teams</h3>
+            <p class="stats" id="total-teams-count">0</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h3 class="card-title">Upcoming Matches</h3>
+            <p class="stats" id="upcoming-matches-count">0</p>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="section-title">Recent Tournaments</h2>
+      <div class="card">
+        <div class="card-body">
+          <div class="table-container">
+            <table id="recent-tournaments-table">
+              <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+              </thead>
+              <tbody>
+              <!-- Tournament data will be loaded here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="section-title">Upcoming Matches</h2>
+      <div class="card">
+        <div class="card-body">
+          <div class="table-container">
+            <table id="upcoming-matches-table">
+              <thead>
+              <tr>
+                <th>Tournament</th>
+                <th>Match</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+              </thead>
+              <tbody>
+              <!-- Match data will be loaded here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tournaments Page -->
+    <div class="page" id="tournaments-page">
+      <h1 class="section-title">
+        Tournaments
+        <button class="btn btn-primary" id="add-tournament-btn">
+          <i class="fas fa-plus"></i> Add Tournament
+        </button>
+      </h1>
+
+      <div class="grid grid-cols-2" id="tournaments-grid">
+        <!-- Tournament cards will be loaded here -->
+      </div>
+    </div>
+
+    <!-- Tournament Detail Page -->
+    <div class="page" id="tournament-detail-page">
+      <div class="section-title">
+        <h1 id="tournament-name">Tournament Name</h1>
+        <div>
+          <button class="btn btn-outline" id="edit-tournament-btn">
+            <i class="fas fa-edit"></i> Edit
+          </button>
+          <button class="btn btn-danger" id="delete-tournament-btn">
+            <i class="fas fa-trash"></i> Delete
+          </button>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab active" data-tab="overview">Overview</div>
+        <div class="tab" data-tab="teams">Teams</div>
+        <div class="tab" data-tab="matches">Matches</div>
+        <div class="tab" data-tab="standings">Standings</div>
+      </div>
+
+      <div class="tab-content active" id="overview-tab">
+        <div class="grid grid-cols-2">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Tournament Details</h3>
+            </div>
+            <div class="card-body">
+              <p><strong>Type:</strong> <span id="tournament-type">League</span></p>
+              <p><strong>Start Date:</strong> <span id="tournament-start-date">01/01/2025</span></p>
+              <p><strong>End Date:</strong> <span id="tournament-end-date">01/02/2025</span></p>
+              <p><strong>Status:</strong> <span id="tournament-status">Active</span></p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Statistics</h3>
+            </div>
+            <div class="card-body">
+              <p><strong>Teams:</strong> <span id="tournament-teams-count">0</span></p>
+              <p><strong>Matches:</strong> <span id="tournament-matches-count">0</span></p>
+              <p><strong>Completed Matches:</strong> <span id="tournament-completed-matches-count">0</span></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-content" id="teams-tab">
+        <div class="section-title">
+          <h2>Teams</h2>
+          <button class="btn btn-primary" id="add-team-to-tournament-btn">
+            <i class="fas fa-plus"></i> Add Team
+          </button>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="table-container">
+              <table id="tournament-teams-table">
+                <thead>
+                <tr>
+                  <th>Team</th>
+                  <th>P</th>
+                  <th>W</th>
+                  <th>D</th>
+                  <th>L</th>
+                  <th>GF</th>
+                  <th>GA</th>
+                  <th>GD</th>
+                  <th>PTS</th>
+                  <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Team data will be loaded here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-content" id="matches-tab">
+        <div class="section-title">
+          <h2>Matches</h2>
+          <button class="btn btn-primary" id="add-match-to-tournament-btn">
+            <i class="fas fa-plus"></i> Add Match
+          </button>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="table-container">
+              <table id="tournament-matches-table">
+                <thead>
+                <tr>
+                  <th>Round</th>
+                  <th>Match</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Match data will be loaded here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-content" id="standings-tab">
+        <h2 class="section-title">Standings</h2>
+        <div class="card">
+          <div class="card-body">
+            <div class="table-container">
+              <table class="standings-table" id="tournament-standings-table">
+                <thead>
+                <tr>
+                  <th>Pos</th>
+                  <th>Team</th>
+                  <th>P</th>
+                  <th>W</th>
+                  <th>D</th>
+                  <th>L</th>
+                  <th>GF</th>
+                  <th>GA</th>
+                  <th>GD</th>
+                  <th>PTS</th>
+                  <th>Form</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Standing data will be loaded here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Teams Page -->
+    <div class="page" id="teams-page">
+      <h1 class="section-title">
+        Teams
+        <button class="btn btn-primary" id="add-team-btn">
+          <i class="fas fa-plus"></i> Add Team
+        </button>
+      </h1>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="table-container">
+            <table id="teams-table">
+              <thead>
+              <tr>
+                <th>Name</th>
+                <th>P</th>
+                <th>W</th>
+                <th>D</th>
+                <th>L</th>
+                <th>GD</th>
+                <th>PTS</th>
+                <th>Form</th>
+                <th>Actions</th>
+              </tr>
+              </thead>
+              <tbody>
+              <!-- Team data will be loaded here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Team Detail Page -->
+    <div class="page" id="team-detail-page">
+      <div class="section-title">
+        <h1 id="team-name">Team Name</h1>
+        <div>
+          <button class="btn btn-outline" id="edit-team-btn">
+            <i class="fas fa-edit"></i> Edit
+          </button>
+          <button class="btn btn-danger" id="delete-team-btn">
+            <i class="fas fa-trash"></i> Delete
+          </button>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab active" data-tab="team-overview">Overview</div>
+        <div class="tab" data-tab="team-matches">Matches</div>
+        <div class="tab" data-tab="team-tournaments">Tournaments</div>
+      </div>
+
+      <div class="tab-content active" id="team-overview-tab">
+        <div class="grid grid-cols-2">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Performance</h3>
+            </div>
+            <div class="card-body">
+              <div class="table-container">
+                <table>
+                  <tr>
+                    <td><strong>Played:</strong></td>
+                    <td id="team-played">0</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Won:</strong></td>
+                    <td id="team-won">0</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Drawn:</strong></td>
+                    <td id="team-drawn">0</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Lost:</strong></td>
+                    <td id="team-lost">0</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Goals For:</strong></td>
+                    <td id="team-goals-for">0</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Goals Against:</strong></td>
+                    <td id="team-goals-against">0</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Goal Difference:</strong></td>
+                    <td id="team-goal-difference">0</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Points:</strong></td>
+                    <td id="team-points">0</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Recent Form</h3>
+            </div>
+            <div class="card-body">
+              <div class="form-guide" id="team-form-guide">
+                <!-- Form guide will be loaded here -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-content" id="team-matches-tab">
+        <h2 class="section-title">Matches</h2>
+        <div class="card">
+          <div class="card-body">
+            <div class="table-container">
+              <table id="team-matches-table">
+                <thead>
+                <tr>
+                  <th>Tournament</th>
+                  <th>Match</th>
+                  <th>Date</th>
+                  <th>Result</th>
+                  <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Match data will be loaded here -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-content" id="team-tournaments-tab">
+        <h2 class="section-title">Tournaments</h2>
+        <div class="grid grid-cols-3" id="team-tournaments-grid">
+          <!-- Tournament cards will be loaded here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Matches Page -->
+    <div class="page" id="matches-page">
+      <h1 class="section-title">
+        Matches
+        <button class="btn btn-primary" id="add-match-btn">
+          <i class="fas fa-plus"></i> Add Match
+        </button>
+      </h1>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="table-container">
+            <table id="matches-table">
+              <thead>
+              <tr>
+                <th>Tournament</th>
+                <th>Match</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+              </thead>
+              <tbody>
+              <!-- Match data will be loaded here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Match Detail Page -->
+    <div class="page" id="match-detail-page">
+      <div class="section-title">
+        <h1 id="match-title">Team A vs Team B</h1>
+        <div>
+          <button class="btn btn-outline" id="edit-match-btn">
+            <i class="fas fa-edit"></i> Edit
+          </button>
+          <button class="btn btn-danger" id="delete-match-btn">
+            <i class="fas fa-trash"></i> Delete
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Match Details</h3>
+          </div>
+          <div class="card-body">
+            <p><strong>Tournament:</strong> <span id="match-tournament">Tournament Name</span></p>
+            <p><strong>Round:</strong> <span id="match-round">Group Stage</span></p>
+            <p><strong>Date:</strong> <span id="match-date">March 21, 2025</span></p>
+            <p><strong>Status:</strong> <span id="match-status">Scheduled</span></p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">Result</h3>
+          </div>
+          <div class="card-body">
+            <div class="match-result">
+              <div class="team home-team">
+                <h4 id="match-home-team">Team A</h4>
+                <div class="score" id="match-home-score">0</div>
+              </div>
+              <div class="match-separator">vs</div>
+              <div class="team away-team">
+                <h4 id="match-away-team">Team B</h4>
+                <div class="score" id="match-away-score">0</div>
+              </div>
+            </div>
+
+            <div class="match-actions" id="match-actions">
+              <button class="btn btn-primary" id="record-result-btn">
+                <i class="fas fa-edit"></i> Record Result
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modals -->
+  <!-- Tournament Modal -->
+  <div class="modal" id="tournament-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="tournament-modal-title">Add Tournament</h2>
+        <span class="close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <form id="tournament-form">
+          <div class="form-group">
+            <label for="tournament-name-input">Name</label>
+            <input type="text" id="tournament-name-input" required>
+          </div>
+          <div class="form-group">
+            <label for="tournament-type-input">Type</label>
+            <select id="tournament-type-input" required>
+              <option value="league">League</option>
+              <option value="knockout">Knockout</option>
+              <option value="group">Group Stage</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="tournament-start-date-input">Start Date</label>
+            <input type="date" id="tournament-start-date-input" required>
+          </div>
+          <div class="form-group">
+            <label for="tournament-end-date-input">End Date</label>
+            <input type="date" id="tournament-end-date-input" required>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline" id="tournament-cancel-btn">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="tournament-submit-btn">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Team Modal -->
+  <div class="modal" id="team-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="team-modal-title">Add Team</h2>
+        <span class="close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <form id="team-form">
+          <div class="form-group">
+            <label for="team-name-input">Name</label>
+            <input type="text" id="team-name-input" required>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline" id="team-cancel-btn">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="team-submit-btn">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Match Modal -->
+  <div class="modal" id="match-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="match-modal-title">Add Match</h2>
+        <span class="close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <form id="match-form">
+          <div class="form-group">
+            <label for="match-tournament-input">Tournament</label>
+            <select id="match-tournament-input" required>
+              <!-- Tournament options will be loaded here -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="match-home-team-input">Home Team</label>
+            <select id="match-home-team-input" required>
+              <!-- Team options will be loaded here -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="match-away-team-input">Away Team</label>
+            <select id="match-away-team-input" required>
+              <!-- Team options will be loaded here -->
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="match-date-input">Date</label>
+            <input type="datetime-local" id="match-date-input" required>
+          </div>
+          <div class="form-group">
+            <label for="match-round-input">Round</label>
+            <input type="text" id="match-round-input" placeholder="e.g. Group Stage, Semifinal">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline" id="match-cancel-btn">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="match-submit-btn">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Match Result Modal -->
+  <div class="modal" id="match-result-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Record Match Result</h2>
+        <span class="close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <form id="match-result-form">
+          <div class="match-result-teams">
+            <div class="team">
+              <h4 id="result-home-team">Team A</h4>
+              <input type="number" id="result-home-score" min="0" required>
+            </div>
+            <div class="match-separator">vs</div>
+            <div class="team">
+              <h4 id="result-away-team">Team B</h4>
+              <input type="number" id="result-away-score" min="0" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline" id="result-cancel-btn">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="result-submit-btn">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal -->
+  <div class="modal" id="confirmation-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Confirm Action</h2>
+        <span class="close">&times;</span>
+      </div>
+      <div class="modal-body">
+        <p id="confirmation-message">Are you sure you want to proceed?</p>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="confirmation-cancel-btn">Cancel</button>
+          <button type="button" class="btn btn-danger" id="confirmation-confirm-btn">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notifications -->
+  <div class="toast-container" id="toast-container"></div>
+</main>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2025 TournamentPro. All rights reserved.</p>
+  </div>
+</footer>
+
+<!-- Loading Spinner -->
+<div class="loading-spinner" id="loading-spinner">
+  <div class="spinner"></div>
+</div>
+
+<!-- Scripts -->
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+<script src="js/app.js"></script>    </div>
+  </div></main>
+
+<script>// Tournament Management System - Main JavaScript
+
+// Base API URL - Change this to match your backend URL
+const API_BASE_URL = 'http://localhost:8080/api';
+
+// Global state
+let currentPage = 'dashboard';
+let selectedTournamentId = null;
+let selectedTeamId = null;
+let selectedMatchId = null;
+
+// DOM Content Loaded - Initialize the application
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize navigation
+  initNavigation();
+
+  // Show dashboard by default
+  loadDashboard();
+
+  // Initialize event listeners for buttons
+  initButtonListeners();
+
+  // Initialize tab navigation
+  initTabs();
+});
+
+// Initialize navigation
+function initNavigation() {
+  const navLinks = document.querySelectorAll('.nav-link');
+
+  navLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const page = this.getAttribute('data-page');
+      navigateTo(page);
+    });
+  });
+}
+
+// Navigate to a specific page
+function navigateTo(page, id = null) {
+  // Hide all pages
+  document.querySelectorAll('.page').forEach(p => {
+    p.classList.remove('active');
+  });
+
+  // Remove active class from all nav links
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.classList.remove('active');
+  });
+
+  // Add active class to current nav link
+  const navLink = document.querySelector(`.nav-link[data-page="${page}"]`);
+  if (navLink) {
+    navLink.classList.add('active');
+  }
+
+  currentPage = page;
+
+  // Show specific page based on navigation
+  switch (page) {
+    case 'dashboard':
+      document.getElementById('dashboard-page').classList.add('active');
+      loadDashboard();
+      break;
+    case 'tournaments':
+      document.getElementById('tournaments-page').classList.add('active');
+      loadTournaments();
+      break;
+    case 'tournament-detail':
+      document.getElementById('tournament-detail-page').classList.add('active');
+      selectedTournamentId = id;
+      loadTournamentDetails(id);
+      break;
+    case 'teams':
+      document.getElementById('teams-page').classList.add('active');
+      loadTeams();
+      break;
+    case 'team-detail':
+      document.getElementById('team-detail-page').classList.add('active');
+      selectedTeamId = id;
+      loadTeamDetails(id);
+      break;
+    case 'matches':
+      document.getElementById('matches-page').classList.add('active');
+      loadMatches();
+      break;
+    case 'match-detail':
+      document.getElementById('match-detail-page').classList.add('active');
+      selectedMatchId = id;
+      loadMatchDetails(id);
+      break;
+  }
+}
+
+// Initialize button listeners
+function initButtonListeners() {
+  // Tournament related buttons
+  document.getElementById('add-tournament-btn').addEventListener('click', () => showAddTournamentModal());
+  document.getElementById('edit-tournament-btn').addEventListener('click', () => showEditTournamentModal(selectedTournamentId));
+  document.getElementById('delete-tournament-btn').addEventListener('click', () => deleteTournament(selectedTournamentId));
+
+  // Team related buttons
+  document.getElementById('add-team-btn').addEventListener('click', () => showAddTeamModal());
+  document.getElementById('edit-team-btn').addEventListener('click', () => editTeam(selectedTeamId));
+  document.getElementById('delete-team-btn').addEventListener('click', () => deleteTeam(selectedTeamId));
+  document.getElementById('add-team-to-tournament-btn').addEventListener('click', () => showAddTeamToTournamentModal(selectedTournamentId));
+
+  // Match related buttons
+  document.getElementById('add-match-btn').addEventListener('click', () => showAddMatchModal());
+  document.getElementById('add-match-to-tournament-btn').addEventListener('click', () => showAddMatchToTournamentModal(selectedTournamentId));
+  document.getElementById('edit-match-btn').addEventListener('click', () => editMatch(selectedMatchId));
+  document.getElementById('delete-match-btn').addEventListener('click', () => deleteMatch(selectedMatchId));
+}
+
+// Initialize tab navigation
+function initTabs() {
+  const tabs = document.querySelectorAll('.tab');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+      const tabGroup = this.parentElement;
+      const tabContents = tabGroup.parentElement.querySelectorAll('.tab-content');
+      const tabName = this.getAttribute('data-tab');
+
+      // Remove active class from all tabs in this group
+      tabGroup.querySelectorAll('.tab').forEach(t => {
+        t.classList.remove('active');
+      });
+
+      // Add active class to clicked tab
+      this.classList.add('active');
+
+      // Hide all tab contents
+      tabContents.forEach(content => {
+        content.classList.remove('active');
+      });
+
+      // Show selected tab content
+      document.getElementById(`${tabName}-tab`).classList.add('active');
+    });
+  });
+}
+
+// Generic function to fetch data from API
+async function fetchApi(endpoint, method = 'GET', data = null) {
+  const options = {
+    method,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+
+  if (data && ['POST', 'PUT', 'PATCH'].includes(method)) {
+    options.body = JSON.stringify(data);
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}${endpoint}`, options);
+
+    if (!response.ok) {
+      throw new Error(`API request failed with status ${response.status}`);
+    }
+
+    // For DELETE requests or other requests with no content
+    if (response.status === 204) {
+      return null;
+    }
+
+    return await response.json();
+  } catch (error) {
+    showToast('error', `Error: ${error.message}`);
+    console.error('API Error:', error);
+    return null;
+  }
+}
+
+
+
+async function loadDashboard() {
+  // Load statistics
+  const tournaments = await fetchApi('/tournaments');
+  const teams = await fetchApi('/teams');
+  const matches = await fetchApi('/matches');
+
+  if (tournaments && teams && matches) {
+    const activeTournaments = tournaments.filter(t => t.status === 'ongoing').length;
+    document.getElementById('active-tournaments-count').textContent = activeTournaments;
+    document.getElementById('total-teams-count').textContent = teams.length;
+
+    const upcomingMatches = matches.filter(m => m.status === 'Scheduled').length;
+    document.getElementById('upcoming-matches-count').textContent = upcomingMatches;
+
+    loadRecentTournaments(tournaments);
+
+    loadUpcomingMatches(matches);
+  }
+}
+
+// Load recent tournaments for dashboard
+function loadRecentTournaments(tournaments) {
+  const tableBody = document.querySelector('#recent-tournaments-table tbody');
+  tableBody.innerHTML = '';
+
+  // Sort tournaments by start date, most recent first
+  const recentTournaments = [...tournaments].sort((a, b) =>
+    new Date(b.startDate) - new Date(a.startDate)
+  ).slice(0, 5); // Get only the 5 most recent
+
+  recentTournaments.forEach(tournament => {
+    const row = document.createElement('tr');
+
+    row.innerHTML = `
+            <td>${tournament.name}</td>
+            <td>${formatDate(tournament.startDate)}</td>
+            <td>${formatDate(tournament.endDate)}</td>
+            <td>${tournament.type}</td>
+            <td><span class="status-badge status-${tournament.status.toLowerCase()}">${tournament.status}</span></td>
+            <td>
+                <button class="btn btn-outline" onclick="navigateTo('tournament-detail', ${tournament.id})">
+                    <i class="fas fa-eye"></i> View
+                </button>
+            </td>
+        `;
+
+    tableBody.appendChild(row);
+  });
+}
+function formatDate(date) {
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  return new Date(date).toLocaleDateString('en-US', options); // Tarixi "month day, year" formatında göstərir
+}
+
+
+// Load upcoming matches for dashboard
+function loadUpcomingMatches(matches) {
+  const tableBody = document.querySelector('#upcoming-matches-table tbody');
+  tableBody.innerHTML = '';
+
+  // Filter scheduled matches and sort by date
+  const upcomingMatches = matches
+    .filter(match => match.status === 'Scheduled')
+    .sort((a, b) => new Date(a.matchDate) - new Date(b.matchDate))
+    .slice(0, 5); // Get only the 5 most upcoming
+
+  upcomingMatches.forEach(match => {
+    const row = document.createElement('tr');
+
+    row.innerHTML = `
+            <td>Tournament ${match.tournamentId}</td>
+            <td>
+                <div class="versus">
+                    <span class="team-name">${match.homeTeamName}</span>
+                    <span>vs</span>
+                    <span class="team-name">${match.awayTeamName}</span>
+                </div>
+            </td>
+            <td>${formatDateTime(match.matchDate)}</td>
+            <td><span class="status-badge status-${match.status.toLowerCase()}">${match.status}</span></td>
+            <td>
+                <button class="btn btn-outline" onclick="navigateTo('match-detail', ${match.id})">
+                    <i class="fas fa-eye"></i> View
+                </button>
+            </td>
+        `;
+
+    tableBody.appendChild(row);
+  });
+}
+
+// Load all tournaments
+async function loadTournaments() {
+  const response = await fetch('/tournaments');
+  const tournaments = await response.json();
+  console.log("API Response:", tournaments);
+
+  if (tournaments) {
+    const tournamentsGrid = document.getElementById('tournaments-grid');
+    tournamentsGrid.innerHTML = '';
+
+    tournaments.forEach(tournament => {
+      const tournamentCard = document.createElement('div');
+      tournamentCard.className = 'card';
+
+      tournamentCard.innerHTML = `
+                <div class="card-header">
+                    <h3 class="card-title">${tournament.name}</h3>
+                    <span class="status-badge status-${tournament.status.toLowerCase()}">${tournament.status}</span>
+                </div>
+                <div class="card-body">
+                    <p><strong>Type:</strong> ${tournament.type}</p>
+                    <p><strong>Start Date:</strong> ${formatDate(tournament.startDate)}</p>
+                    <p><strong>End Date:</strong> ${formatDate(tournament.endDate)}</p>
+                    <div style="margin-top: 1rem;">
+                        <button class="btn btn-primary" onclick="navigateTo('tournament-detail', ${tournament.id})">
+                            <i class="fas fa-eye"></i> View Details
+                        </button>
+                    </div>
+                </div>
+            `;
+
+      tournamentsGrid.appendChild(tournamentCard);
+    });
+  }
+}
+
+// Load tournament details
+async function loadTournamentDetails(tournamentId) {
+  const tournament = await fetchApi(`/tournaments/${tournamentId}`);
+
+  if (tournament) {
+    // Update tournament information
+    document.getElementById('tournament-name').textContent = tournament.name;
+    document.getElementById('tournament-type').textContent = tournament.type;
+    document.getElementById('tournament-start-date').textContent = formatDate(tournament.startDate);
+    document.getElementById('tournament-end-date').textContent = formatDate(tournament.endDate);
+    document.getElementById('tournament-status').textContent = tournament.status;
+
+    // Load tournament teams
+    const teams = await fetchApi(`/teams/tournament/${tournamentId}`);
+    document.getElementById('tournament-teams-count').textContent = teams ? teams.length : 0;
+
+    // Load tournament matches
+    const matches = await fetchApi(`/matches/tournament/${tournamentId}`);
+    if (matches) {
+      document.getElementById('tournament-matches-count').textContent = matches.length;
+      const completedMatches = matches.filter(m => m.status === 'Completed').length;
+      document.getElementById('tournament-completed-matches-count').textContent = completedMatches;
+    }
+
+    // Load teams tab content
+    loadTournamentTeams(tournamentId, teams);
+
+    // Load matches tab content
+    loadTournamentMatches(tournamentId, matches);
+
+    // Load standings tab content
+    loadTournamentStandings(tournamentId, teams, matches);
+  }
+}
+
+// Load tournament teams
+function loadTournamentTeams(tournamentId, teams) {
+  const tableBody = document.querySelector('#tournament-teams-table tbody');
+  tableBody.innerHTML = '';
+
+  if (!teams || teams.length === 0) {
+    const row = document.createElement('tr');
+    row.innerHTML = '<td colspan="10" style="text-align: center;">No teams found</td>';
+    tableBody.appendChild(row);
+    return;
+  }
+
+  teams.forEach(team => {
+    const row = document.createElement('tr');
+
+    row.innerHTML = `
+            <td>${team.name}</td>
+            <td>${team.played}</td>
+            <td>${team.wins}</td>
+            <td>${team.draws}</td>
+            <td>${team.losses}</td>
+            <td>${team.goalsScored}</td>
+            <td>${team.goalsConceded}</td>
+            <td>${team.goalDifference}</td>
+            <td>${team.points}</td>
+            <td>
+                <button class="btn btn-outline" onclick="navigateTo('team-detail', ${team.id})">
+                    <i class="fas fa-eye"></i>
+                </button>
+                <button class="btn btn-danger" onclick="removeTeamFromTournament(${team.id}, ${tournamentId})">
+                    <i class="fas fa-times"></i>
+                </button>
+            </td>
+        `;
+
+    tableBody.appendChild(row);
+  });
+}
+
+// Load tournament matches
+function loadTournamentMatches(tournamentId, matches) {
+  const tableBody = document.querySelector('#tournament-matches-table tbody');
+  tableBody.innerHTML = '';
+
+  if (!matches || matches.length === 0) {
+    const row = document.createElement('tr');
+    row.innerHTML = '<td colspan="5" style="text-align: center;">No matches found</td>';
+    tableBody.appendChild(row);
+    return;
+  }
+
+  matches.forEach(match => {
+    const row = document.createElement('tr');
+
+    row.innerHTML = `
+            <td>${match.round || 'N/A'}</td>
+            <td>
+                <div class="versus">
+                    <span class="team-name">${match.homeTeamName}</span>
+                    <span>${match.homeTeamScore !== null ? match.homeTeamScore : '-'}</span>
+                    <span>vs</span>
+                    <span>${match.awayTeamScore !== null ? match.awayTeamScore : '-'}</span>
+                    <span class="team-name">${match.awayTeamName}</span>
+                </div>
+            </td>
+            <td>${formatDateTime(match.matchDate)}</td>
+            <td><span class="status-badge status-${match.status.toLowerCase()}">${match.status}</span></td>
+            <td>
+                <button class="btn btn-outline" onclick="navigateTo('match-detail', ${match.id})">
+                    <i class="fas fa-eye"></i>
+                </button>
+                ${match.status === 'Scheduled' ? `
+                <button class="btn btn-primary" onclick="recordMatchResult(${match.id})">
+                    <i class="fas fa-edit"></i> Record Result
+                </button>` : ''}
+            </td>
+        `;
+
+    tableBody.appendChild(row);
+  });
+}
+
+// Load tournament standings
+function loadTournamentStandings(tournamentId, teams, matches) {
+  const tableBody = document.querySelector('#tournament-standings-table tbody');
+  tableBody.innerHTML = '';
+
+  if (!teams || teams.length === 0) {
+    const row = document.createElement('tr');
+    row.innerHTML = '<td colspan="11" style="text-align: center;">No teams found</td>';
+    tableBody.appendChild(row);
+    return;
+  }
+
+  // Sort teams by points, then goal difference
+  const sortedTeams = [...teams].sort((a, b) => {
+    if (a.points !== b.points) {
+      return b.points - a.points;
+    }
+    return b.goalDifference - a.goalDifference;
+  });
+
+  sortedTeams.forEach((team, index) => {
+    const row = document.createElement('tr');
+
+    // Create form guide elements
+    let formGuide = '';
+    if (team.last5Games) {
+      for (let i = 0; i < team.last5Games.length; i++) {
+        const result = team.last5Games.charAt(i);
+        let resultClass = '';
+        let resultText = '';
+
+        if (result === 'W') {
+          resultClass = 'form-win';
+          resultText = 'W';
+        } else if (result === 'D') {
+          resultClass = 'form-draw';
+          resultText = 'D';
+        } else if (result === 'L') {
+          resultClass = 'form-loss';
+          resultText = 'L';
+        }
+
+        formGuide += `<div class="form-result ${resultClass}">${resultText}</div>`;
+      }
+    }
+
+    row.innerHTML = `
+            <td>
+                <div class="rank">${index + 1}</div>
+            </td>
+            <td>
+                <div class="team-standing">
+                    <span>${team.name}</span>
+                </div>
+            </td>
+            <td>${team.played}</td>
+            <td>${team.wins}</td>
+            <td>${team.draws}</td>
+            <td>${team.losses}</td>
+            <td>${team.goalsScored}</td>
+            <td>${team.goalsConceded}</td>
+            <td>${team.goalDifference}</td>
+            <td>${team.points}</td>
+            <td>
+                <div class="form-guide">
+                    ${formGuide}
+                </div>
+            </td>
+        `;
+
+    tableBody.appendChild(row);
+  });
+}
+
+// Show add tournament modal
+function showAddTournamentModal() {
+  // Create modal HTML
+  const modalHTML = `
+        <div class="modal-overlay" id="add-tournament-modal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3 class="modal-title">Add Tournament</h3>
+                    <button class="modal-close" onclick="closeModal('add-tournament-modal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-container">
+                        <div class="form-group">
+                            <label class="form-label" for="tournament-name-input">Tournament Name</label>
+                            <input type="text" id="tournament-name-input" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="tournament-type-input">Type</label>
+                            <select id="tournament-type-input" class="form-select" required>
+                                <option value="League">League</option>
+                                <option value="Knockout">Knockout</option>
+                                <option value="Group Stage">Group Stage</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="tournament-start-date-input">Start Date</label>
+                            <input type="date" id="tournament-start-date-input" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="tournament-end-date-input">End Date</label>
+                            <input type="date" id="tournament-end-date-input" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="tournament-status-input">Status</label>
+                            <select id="tournament-status-input" class="form-select" required>
+                                <option value="Upcoming">Upcoming</option>
+                                <option value="ongoing">Active</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline" onclick="closeModal('add-tournament-modal')">Cancel</button>
+                    <button class="btn btn-primary" onclick="createTournament()">Create Tournament</button>
+                </div>
+            </div>
+        </div>
+    `;
+
+  // Add modal to the DOM
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+  // Show modal
+  setTimeout(() => {
+    document.getElementById('add-tournament-modal').classList.add('active');
+  }, 10);
+}
+
+// Create a new tournament
+async function createTournament() {
+  const name = document.getElementById('tournament-name-input').value;
+  const startDate = document.getElementById('tournament-start-date-input').value;
+  const endDate = document.getElementById('tournament-end-date-input').value;
+  const type = document.getElementById('tournament-type-input').value;
+  const status = document.getElementById('tournament-status-input').value;
+
+  if (!name || !type || !startDate || !endDate || !status) {
+    showToast('error', 'Please fill all required fields');
+    return;
+  }
+  const tournamentData = {
+    name,
+    startDate,
+    endDate,
+    type,
+    status
+  };
+
+  const response = await fetchApi('/tournaments', 'POST', tournamentData);
+
+  if (response) {
+    closeModal('add-tournament-modal');
+    showToast('success', 'Tournament created successfully');
+
+    // Reload current page
+    if (currentPage === 'tournaments') {
+      loadTournaments();
+    } else {
+      navigateTo('tournaments');
+    }
+  }
+}
+function closeModal(modalId) {
+  const modal = document.getElementById(modalId);
+  modal.style.display = 'none';
+}
+function showToast(type, message) {
+  alert(`${type.toUpperCase()}: ${message}`);
+}
+
+
+function showEditTournamentModal(tournament) {
+  const { id, name, type, startDate, endDate, status } = tournament;
+  const modalHTML = `
+        <div class="modal-overlay" id="edit-tournament-modal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3 class="modal-title">Edit Tournament</h3>
+                    <button class="modal-close" onclick="closeModal('edit-tournament-modal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-container">
+                        <div class="form-group">
+                            <label class="form-label" for="edit-tournament-name-input">Tournament Name</label>
+                            <input type="text" id="edit-tournament-name-input" class="form-input" value="${name}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edit-tournament-type-input">Type</label>
+                            <select id="edit-tournament-type-input" class="form-select" required>
+                                <option value="League" ${type === 'League' ? 'selected' : ''}>League</option>
+                                <option value="Knockout" ${type === 'Knockout' ? 'selected' : ''}>Knockout</option>
+                                <option value="Group Stage" ${type === 'Group Stage' ? 'selected' : ''}>Group Stage</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edit-tournament-start-date-input">Start Date</label>
+                            <input type="date" id="edit-tournament-start-date-input" class="form-input" value="${startDate}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edit-tournament-end-date-input">End Date</label>
+                            <input type="date" id="edit-tournament-end-date-input" class="form-input" value="${endDate}" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="edit-tournament-status-input">Status</label>
+                            <select id="edit-tournament-status-input" class="form-select" required>
+                                <option value="Upcoming" ${status === 'Upcoming' ? 'selected' : ''}>Upcoming</option>
+                                <option value="Ongoing" ${status === 'Ongoing' ? 'selected' : ''}>Active</option>
+                                <option value="Completed" ${status === 'Completed' ? 'selected' : ''}>Completed</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline" onclick="closeModal('edit-tournament-modal')">Cancel</button>
+                    <button class="btn btn-primary" onclick="saveTournamentChanges(${id})">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    `;
+
+  // Add modal to the DOM
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+  // Show modal
+  setTimeout(() => {
+    document.getElementById('edit-tournament-modal').classList.add('active');
+  }, 10);
+}
+
+function saveTournamentChanges(id) {
+  const name = document.getElementById('edit-tournament-name-input').value.trim();
+  const type = document.getElementById('edit-tournament-type-input').value;
+  const startDate = document.getElementById('edit-tournament-start-date-input').value;
+  const endDate = document.getElementById('edit-tournament-end-date-input').value;
+  const status = document.getElementById('edit-tournament-status-input').value;
+
+  if (!name || !startDate || !endDate) {
+    alert('Zəhmət olmasa bütün sahələri doldur!');
+    return;
+  }
+
+  const updatedTournament = {
+    id: id,
+    name: name,
+    type: type,
+    startDate: startDate,
+    endDate: endDate,
+    status: status
+  };
+
+  fetch(`/tournaments/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(updatedTournament)
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Xəta baş verdi!');
+      }
+      return response.json();
+    })
+    .then(data => {
+      alert('Turnir uğurla yeniləndi!');
+      closeModal('edit-tournament-modal');
+      refreshTournamentsList();
+    })
+    .catch(error => {
+      console.error('Xəta:', error);
+      alert('Yeniləmə zamanı xəta baş verdi.');
+    });
+}
+
+
+
+function openModal(modalId) {
+  const modal = document.getElementById(modalId);
+  modal.style.display = 'block'; // or whatever CSS you use to show modals
+}
+
+// Delete tournament
+async function deleteTournament(tournamentId) {
+  if (confirm('Are you sure you want to delete this tournament?')) {
+    await fetchApi(`/tournaments/${tournamentId}`, 'DELETE');
+    showToast('success', 'Tournament deleted successfully');
+    navigateTo('tournaments');
+  }
+}
+
+
+// Load all teams
+async function loadTeams() {
+  const teams = await fetchApi('/teams');
+  console.log('Teams data:', teams);
+
+  // Find the table - you might need to adjust this selector
+  // based on your actual HTML structure
+  const table = document.querySelector('#teams-table') ||
+    document.querySelector('table') ||
+    document.querySelector('[data-table="teams"]');
+
+  console.log('Found table:', table);
+
+  if (!table) {
+    console.error('Could not find teams table');
+    return;
+  }
+
+  const tableBody = table.querySelector('tbody') || table;
+  console.log('Found table body:', tableBody);
+
+  // Clear existing rows except the header row
+  const rows = tableBody.querySelectorAll('tr:not(:first-child)');
+  rows.forEach(row => row.remove());
+
+  if (!teams || teams.length === 0) {
+    // Add a placeholder row if no teams
+    const emptyRow = document.createElement('tr');
+    emptyRow.innerHTML = '<td colspan="9">No teams available</td>';
+    tableBody.appendChild(emptyRow);
+    return;
+  }
+
+  // Add team rows
+  teams.forEach(team => {
+    const row = document.createElement('tr');
+
+    // Check if team has all required properties
+    console.log('Processing team:', team);
+
+    // Create cells for all columns
+    row.innerHTML = `
+      <td>${team.name || 'Unknown'}</td>
+      <td>${team.played || 0}</td>
+      <td>${team.wins || 0}</td>
+      <td>${team.draws || 0}</td>
+      <td>${team.losses || 0}</td>
+      <td>${team.goalDifference || 0}</td>
+      <td>${team.points || 0}</td>
+      <td>
+        ${team.last5Games ? createFormGuide(team.last5Games) : ''}
+      </td>
+      <td>
+        <button class="btn btn-outline" onclick="viewTeam(${team.id})">
+          <i class="fas fa-eye"></i> View
+        </button>
+        <button class="btn btn-danger" onclick="deleteTeam(${team.id})">
+          <i class="fas fa-trash"></i>
+        </button>
+      </td>
+    `;
+
+    tableBody.appendChild(row);
+  });
+}
+
+// Helper function to create form guide
+function createFormGuide(last5Games) {
+  if (!last5Games) return '';
+
+  let formGuide = '<div class="form-guide">';
+  for (let i = 0; i < last5Games.length; i++) {
+    const result = last5Games.charAt(i);
+    let resultClass = '';
+
+    if (result === 'W') resultClass = 'form-win';
+    else if (result === 'D') resultClass = 'form-draw';
+    else if (result === 'L') resultClass = 'form-loss';
+
+    formGuide += `<div class="form-result ${resultClass}">${result}</div>`;
+  }
+  formGuide += '</div>';
+  return formGuide;
+}
+
+function showTab(tabId) {
+  // Hide all tabs
+  const tabs = document.querySelectorAll('.tab-content');
+  tabs.forEach(tab => tab.classList.remove('active'));
+
+  // Show selected tab
+  const selectedTab = document.getElementById(tabId);
+  if (selectedTab) {
+    selectedTab.classList.add('active');
+  }
+}
+function viewTeam(teamId) {
+  loadTeamDetails(teamId);
+}
+// Function to clear all content inside an element
+function clearElement(elementId) {
+  const element = document.getElementById(elementId);
+  if (element) {
+    element.innerHTML = '';
+  }
+}
+
+// To clear the team overview tab content
+function clearTeamOverview() {
+  // Clear performance statistics
+  document.getElementById('team-played').textContent = '0';
+  document.getElementById('team-won').textContent = '0';
+  document.getElementById('team-drawn').textContent = '0';
+  document.getElementById('team-lost').textContent = '0';
+  document.getElementById('team-goals-for').textContent = '0';
+  document.getElementById('team-goals-against').textContent = '0';
+  document.getElementById('team-goal-difference').textContent = '0';
+  document.getElementById('team-points').textContent = '0';
+
+  // Clear form guide
+  const formGuideElement = document.getElementById('team-form-guide');
+  if (formGuideElement) {
+    formGuideElement.innerHTML = '';
+  }
+}
+
+// Function to delete team
+async function deleteTeam(teamId) {
+  if (confirm('Are you sure you want to delete this team?')) {
+    try {
+      // Call fetchApi with the correct parameters:
+      // 1. endpoint - the team ID with path
+      // 2. method - 'DELETE' as a string
+      // 3. data - null since we're not sending any data with the DELETE
+      const response = await fetchApi(`/teams/${teamId}`, 'DELETE', null);
+
+      console.log('Team deleted successfully');
+
+      // Reload the teams list
+      loadTeams();
+
+      // Show a success message
+      showToast('success', 'Team deleted successfully');
+
+    } catch (error) {
+      console.error('Error deleting team:', error);
+    }
+  }
+}
+
+// Load team details
+async function loadTeamDetails(teamId) {
+  try {
+    const team = await fetchApi(`/teams/${teamId}`);
+    console.log('Team details:', team);
+
+    if (!team) {
+      console.error('Could not load team details');
+      return;
+    }
+    // Update team information
+    document.getElementById('team-name').textContent = team.name;
+    document.getElementById('team-played').textContent = team.played;
+    document.getElementById('team-won').textContent = team.wins;
+    document.getElementById('team-drawn').textContent = team.draws;
+    document.getElementById('team-lost').textContent = team.losses;
+    document.getElementById('team-goal-difference').textContent = team.goalDifference;
+    document.getElementById('team-goals-for').textContent = team.goalsScored;
+    document.getElementById('team-goals-against').textContent = team.goalsConceded;
+    document.getElementById('team-points').textContent = team.points;
+
+    // Create form guide
+    const formGuideElement = document.getElementById('team-form-guide');
+    formGuideElement.innerHTML = '';
+
+    if (formGuideElement && team.last5Games && team.last5Games.length > 0) {
+      formGuideElement.innerHTML = createFormGuide(team.last5Games);
+    } else {
+      formGuideElement.innerHTML = '<p>No recent matches</p>';
+    }
+
+    showTab('team-overview-tab');
+
+    const matches = await fetchApi(`/matches/team/${teamId}`);
+    loadTeamMatches(matches);
+
+    // Team tournaments would be loaded here if we had an endpoint for it
+    loadTeamTournaments(teamId);
+
+} catch (error) {
+  console.error('Error loading team details:', error);
+}
+}
+
+// Load team matches
+function loadTeamMatches(matches) {
+  const tableBody = document.querySelector('#team-matches-table tbody');
+  tableBody.innerHTML = '';
+
+  if (!matches || matches.length === 0) {
+    const row = document.createElement('tr');
+    row.innerHTML = '<td colspan="5" style="text-align: center;">No matches found</td>';
+    tableBody.appendChild(row);
+    return;
+  }
+
+  matches.forEach(match => {
+    const row = document.createElement('tr');
+
+    // Determine result text for this team
+    let resultText = 'N/A';
+    if (match.status === 'Completed' && match.homeTeamScore !== null && match.awayTeamScore !== null) {
+      if (match.homeTeamId === selectedTeamId) {
+        if (match.homeTeamScore > match.awayTeamScore) {
+          resultText = 'Win';
+        } else if (match.homeTeamScore < match.awayTeamScore) {
+          resultText = 'Loss';
+        } else {
+          resultText = 'Draw';
+        }
+      } else {
+        if (match.homeTeamScore < match.awayTeamScore) {
+          resultText = 'Win';
+        } else if (match.homeTeamScore > match.awayTeamScore) {
+          resultText = 'Loss';
+        } else {
+          resultText = 'Draw';
+        }
+      }
+    }
+
+    row.innerHTML = `
+            <td>Tournament ${match.tournamentId}</td>
+            <td>
+                <div class="versus">
+                    <span class="team-name">${match.homeTeamName}</span>
+                    <span>${match.homeTeamScore !== null ? match.homeTeamScore : '-'}</span>
+                    <span>vs</span>
+                    <span>${match.awayTeamScore !== null ? match.awayTeamScore : '-'}</span>
+                    <span class="team-name">${match.awayTeamName}</span>
+                </div>
+            </td>
+            <td>${formatDateTime(match.matchDate)}</td>
+            <td>${resultText}</td>
+            <td><span class="status-badge status-${match.status.toLowerCase()}">${match.status}</span></td>
+        `;
+
+    tableBody.appendChild(row);
+  });
+}
+
+// Show add team modal
+function showAddTeamModal() {
+  // Create modal HTML
+  const modalHTML = `
+        <div class="modal-overlay" id="add-team-modal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h3 class="modal-title">Add Team</h3>
+                    <button class="modal-close" onclick="closeModal('add-team-modal')">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-container">
+                        <div class="form-group">
+                            <label class="form-label" for="team-name-input">Team Name</label>
+                            <input type="text" id="team-name-input" class="form-input" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline" onclick="closeModal('add-team-modal')">Cancel</button>
+                    <button class="btn btn-primary" onclick="createTeam()">Create Team</button>
+                </div>
+            </div>
+        </div>
+    `;
+
+  // Add modal to the DOM
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+  // Show modal
+  setTimeout(() => {
+    document.getElementById('add-team-modal').classList.add('active');
+  }, 10);
+}
+
+// Create a new team
+<!--async function createTeam() {-->
+<!--  const name = document.getElementById('team-name-input').value;-->
+
+<!--  if (!name) {-->
+<!--    showToast('error', 'Please enter a team name');-->
+<!--    return;-->
+<!--  }-->
+
+<!--  const teamData = {-->
+<!--    name,-->
+<!--    played: 0,-->
+<!--    wins: 0,-->
+</script>-->
+</body></html>
